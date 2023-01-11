@@ -18,11 +18,11 @@ class VerifyCsrfToken extends Middleware
         'user/check_login',
         'user/change_password',
         'user/update',
-        //product
-        'product/get_by_id',
-        'product/get_products',
-        'product/add',
-        'product/update',
-        'product/delete',
+        //barang
+        'barang/get_by_id',
+        'barang/get_barangs',
+        'barang/add',
+        'barang/update',
+        'barang/delete',
     ];
 }

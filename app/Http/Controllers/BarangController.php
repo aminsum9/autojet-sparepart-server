@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Produk;
+use App\Models\Barang;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
-class ProductController extends Controller
+class BarangController extends Controller
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     /**
@@ -23,35 +23,35 @@ class ProductController extends Controller
         //
     }
 
-    public function get_product_by_id(Request $request)
+    public function get_barang_by_id(Request $request)
     {
-        $product_id = $request->input('product_id');
+        $barang_id = $request->input('barang_id');
 
-        $products = Produk::where('id','=',$product_id)->first();
+        $barangs = Barang::where('id','=',$barang_id)->first();
 
         return ([
             'success' => true,
-            'message' => 'Data produk ditemukan.',
-            'data'    => $products
+            'message' => 'Data barang ditemukan.',
+            'data'    => $barangs
         ]);
     }
 
-    public function get_products(Request $request)
+    public function get_barangs(Request $request)
     {
         $paging = $request->input('paging');
 
 
 
-        $products = Produk::orderBy('created_at','DESC')->paginate($paging);
+        $barangs = Barang::orderBy('created_at','DESC')->paginate($paging);
 
         return ([
             'success' => true,
-            'message' => 'Data produk ditemukan.',
-            'data'    => $products
+            'message' => 'Data barang ditemukan.',
+            'data'    => $barangs
         ]);
     }
 
-    public function add_product(Request $request)
+    public function add_barang(Request $request)
     {
         $name = $request->input('name');
         $image = $request->input('image');
@@ -73,17 +73,17 @@ class ProductController extends Controller
 
             $alias = Str::slug($name).'-'.rand(111111, 999999);
 
-            $find_user = Produk::where('alias', '=', $alias)->get();
+            $find_user = Barang::where('alias', '=', $alias)->get();
 
             if (count($find_user) == 1) {
                 return ([
                     'success' => false,
-                    'message' => 'Produk sudah ada.'
+                    'message' => 'Barang sudah ada.'
                 ]);
             }
             $api_key = sha1(time());
 
-            $add_product = Produk::create([
+            $add_barang = Barang::create([
                 'name'     => $name,
                 'alias'    => $alias,
                 'image'    => $image,
@@ -92,28 +92,28 @@ class ProductController extends Controller
                 'desc'     => $desc,
             ]);
 
-            if ($add_product) {
+            if ($add_barang) {
                 $response = ([
-                    'id'  => $add_product['id'],
-                    'name'  => $add_product['name'],
-                    'alias' => $add_product['alias'],
-                    'image' => $add_product['image'],
-                    'price' => $add_product['price'],
-                    'discount' => $add_product['discount'],
-                    'desc' => $add_product['desc'],
+                    'id'  => $add_barang['id'],
+                    'name'  => $add_barang['name'],
+                    'alias' => $add_barang['alias'],
+                    'image' => $add_barang['image'],
+                    'price' => $add_barang['price'],
+                    'discount' => $add_barang['discount'],
+                    'desc' => $add_barang['desc'],
                 ]);
 
                 return ([
                     'success' => true,
                     'api_key' => $api_key,
-                    'message' => 'Berhasil menambah produk',
+                    'message' => 'Berhasil menambah barang',
                     'data'    => $response
                 ]);
             } else {
                 return ([
                     'success' => false,
                     'api_key' => '',
-                    'message' => 'Gagal menambah produk',
+                    'message' => 'Gagal menambah barang',
                     'data'    => $responseError
                 ]);
             }
@@ -127,28 +127,28 @@ class ProductController extends Controller
         }
     }
 
-    public function update_product(Request $request)
+    public function update_barang(Request $request)
     {
         
-        $product_id = $request->input('id');
+        $barang_id = $request->input('id');
         $name = $request->input('name');
         $price = $request->input('price');
         $discount = $request->input('discount');
         $desc = $request->input('desc');
 
-        if (!empty($product_id) && !empty($name) && !empty($price)) {
+        if (!empty($barang_id) && !empty($name) && !empty($price)) {
 
             $alias = Str::slug($name).'-'.rand(111111, 999999);
 
-            $find_user = Produk::where('id', '=', $product_id)->get();
+            $find_user = Barang::where('id', '=', $barang_id)->get();
             if (count($find_user) != 1) {
                 return ([
                     'success' => false,
-                    'message' => 'Produk tidak ditemukan.'
+                    'message' => 'Barang tidak ditemukan.'
                 ]);
             }
 
-            $update_product = Produk::where('id', '=', $product_id)->update([
+            $update_barang = Barang::where('id', '=', $barang_id)->update([
                 'name'     => $name,
                 'alias'    => $alias,
                 'price'    => $price,
@@ -156,7 +156,7 @@ class ProductController extends Controller
                 'desc'     => $desc,
             ]);
 
-            if ($update_product) {
+            if ($update_barang) {
                 $response = ([
                     'name'  => $name,
                     'alias' => $alias,
@@ -167,13 +167,13 @@ class ProductController extends Controller
 
                 return ([
                     'success' => true,
-                    'message' => 'Berhasil update data produk',
+                    'message' => 'Berhasil update data barang',
                     'data'    => $response
                 ]);
             } else {
                 return ([
                     'success' => false,
-                    'message' => 'Gagal update data produk'
+                    'message' => 'Gagal update data barang'
                 ]);
             }
         } else {
@@ -184,22 +184,22 @@ class ProductController extends Controller
         }
     }
 
-    public function delete_product(Request $request)
+    public function delete_barang(Request $request)
     {
 
-        $product_id = $request->input('id');
+        $barang_id = $request->input('id');
 
-        $delete_product_data = Produk::where(['id' => $product_id])->delete();
+        $delete_barang_data = Barang::where(['id' => $barang_id])->delete();
 
-        if($delete_product_data){
+        if($delete_barang_data){
             return ([
                 'success' => true,
-                'message' => 'Berhasil menghapus data produk',
+                'message' => 'Berhasil menghapus data barang',
             ]);
         } else {
             return ([
                 'success' => true,
-                'message' => 'Gagal menghapus data produk',
+                'message' => 'Gagal menghapus data barang',
             ]);
         }
     }

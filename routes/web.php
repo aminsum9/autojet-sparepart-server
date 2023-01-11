@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 //controller
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BarangController;
 //middleware
 use App\Http\Middleware\EnsureTokenIsValid;
 
@@ -30,10 +30,10 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/update',[UserController::class, 'update'])->middleware(EnsureTokenIsValid::class);
 });
 
-Route::group(['prefix' => 'product'], function () {
-    Route::post('/get_by_id', [ProductController::class, 'get_product_by_id']);
-    Route::post('/get_products', [ProductController::class, 'get_products']);
-    Route::post('/add', [ProductController::class, 'add_product']);
-    Route::post('/update', [ProductController::class, 'update_product'])->middleware(EnsureTokenIsValid::class);
-    Route::post('/delete', [ProductController::class, 'delete_product'])->middleware(EnsureTokenIsValid::class);
+Route::group(['prefix' => 'barang'], function () {
+    Route::post('/get_by_id', [BarangController::class, 'get_barang_by_id']);
+    Route::post('/get_barangs', [BarangController::class, 'get_barangs']);
+    Route::post('/add', [BarangController::class, 'add_barang']);
+    Route::post('/update', [BarangController::class, 'update_barang'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/delete', [BarangController::class, 'delete_barang'])->middleware(EnsureTokenIsValid::class);
 });

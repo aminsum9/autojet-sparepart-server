@@ -8,10 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Produk extends Authenticatable
+class Barang extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    public $table = "produk";
+    public $table = "barang";
 
     /**
      * The attributes that are mass assignable.
