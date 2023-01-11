@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Barang extends Authenticatable
+class Transaksi extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    public $table = "barang";
+    public $table = "transaksi";
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +18,7 @@ class Barang extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'alias', 'image', 'qty', 'price', 'discount', 'desc',
+        'trx_id', 'user_id', 'status', 'subtotal', 'discount', 'grand_total', 'notes',
     ];
     /**
      * The attributes that should be hidden for serialization.

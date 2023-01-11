@@ -55,6 +55,7 @@ class BarangController extends Controller
         $name = $request->input('name');
         $image = $request->input('image');
         $price = $request->input('price');
+        $qty = $request->input('qty');
         $discount = $request->input('discount');
         $desc = $request->input('desc');
 
@@ -64,6 +65,7 @@ class BarangController extends Controller
             'alias' =>  "",
             'image' =>  "",
             'price' => "",
+            'qty' => "",
             'discount' => "",
             'desc' => "",
         ]);
@@ -80,38 +82,37 @@ class BarangController extends Controller
                     'message' => 'Barang sudah ada.'
                 ]);
             }
-            $api_key = sha1(time());
 
             $add_barang = Barang::create([
                 'name'     => $name,
                 'alias'    => $alias,
                 'image'    => $image,
                 'price'    => $price,
+                'qty'      => $qty,
                 'discount' => $discount,
                 'desc'     => $desc,
             ]);
 
             if ($add_barang) {
                 $response = ([
-                    'id'  => $add_barang['id'],
+                    'id'    => $add_barang['id'],
                     'name'  => $add_barang['name'],
                     'alias' => $add_barang['alias'],
                     'image' => $add_barang['image'],
                     'price' => $add_barang['price'],
+                    'qty'   => $add_barang['qty'],
                     'discount' => $add_barang['discount'],
                     'desc' => $add_barang['desc'],
                 ]);
 
                 return ([
                     'success' => true,
-                    'api_key' => $api_key,
                     'message' => 'Berhasil menambah barang',
                     'data'    => $response
                 ]);
             } else {
                 return ([
                     'success' => false,
-                    'api_key' => '',
                     'message' => 'Gagal menambah barang',
                     'data'    => $responseError
                 ]);
@@ -119,7 +120,6 @@ class BarangController extends Controller
         } else {
             return ([
                 'success' => false,
-                'api_key' => '',
                 'message' => 'Mohon lengkapi data yang diminta',
                 'data'    => $responseError
             ]);
@@ -132,6 +132,7 @@ class BarangController extends Controller
         $barang_id = $request->input('id');
         $name = $request->input('name');
         $price = $request->input('price');
+        $qty = $request->input('qty');
         $discount = $request->input('discount');
         $desc = $request->input('desc');
 
@@ -151,6 +152,7 @@ class BarangController extends Controller
                 'name'     => $name,
                 'alias'    => $alias,
                 'price'    => $price,
+                'qty'      => $qty,
                 'discount' => $discount,
                 'desc'     => $desc,
             ]);
@@ -160,6 +162,7 @@ class BarangController extends Controller
                     'name'  => $name,
                     'alias' => $alias,
                     'price' => $price,
+                    'qty'   => $qty,
                     'discount' => $discount,
                     'image' => $desc
                 ]);

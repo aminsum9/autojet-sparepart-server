@@ -30,5 +30,11 @@ class VerifyCsrfToken extends Middleware
         'supplier/add',
         'supplier/update',
         'supplier/delete',
+        //transaksi
+        'transaksi/get_by_id',
+        'transaksi/get_transaksis',
+        'transaksi/create_transaksi',
+        'transaksi/update',
+        'transaksi/delete',
     ];
 }
