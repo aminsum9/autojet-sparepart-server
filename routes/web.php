@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 //controller
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\SupplierController;
 //middleware
 use App\Http\Middleware\EnsureTokenIsValid;
 
@@ -31,9 +32,17 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 Route::group(['prefix' => 'barang'], function () {
-    Route::post('/get_by_id', [BarangController::class, 'get_barang_by_id']);
-    Route::post('/get_barangs', [BarangController::class, 'get_barangs']);
-    Route::post('/add', [BarangController::class, 'add_barang']);
+    Route::post('/get_by_id', [BarangController::class, 'get_barang_by_id'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/get_barangs', [BarangController::class, 'get_barangs'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/add', [BarangController::class, 'add_barang'])->middleware(EnsureTokenIsValid::class);
     Route::post('/update', [BarangController::class, 'update_barang'])->middleware(EnsureTokenIsValid::class);
     Route::post('/delete', [BarangController::class, 'delete_barang'])->middleware(EnsureTokenIsValid::class);
+});
+
+Route::group(['prefix' => 'supplier'], function () {
+    Route::post('/get_by_id', [SupplierController::class, 'get_supplier_by_id'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/get_suppliers', [SupplierController::class, 'get_suppliers'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/add', [SupplierController::class, 'add_supplier'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/update', [SupplierController::class, 'update_supplier'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/delete', [SupplierController::class, 'delete_supplier'])->middleware(EnsureTokenIsValid::class);
 });

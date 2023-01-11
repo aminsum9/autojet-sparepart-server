@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
 
 class BarangController extends Controller
 {
@@ -25,7 +24,7 @@ class BarangController extends Controller
 
     public function get_barang_by_id(Request $request)
     {
-        $barang_id = $request->input('barang_id');
+        $barang_id = $request->input('id');
 
         $barangs = Barang::where('id','=',$barang_id)->first();
 
@@ -73,9 +72,9 @@ class BarangController extends Controller
 
             $alias = Str::slug($name).'-'.rand(111111, 999999);
 
-            $find_user = Barang::where('alias', '=', $alias)->get();
+            $find_barang = Barang::where('alias', '=', $alias)->get();
 
-            if (count($find_user) == 1) {
+            if (count($find_barang) == 1) {
                 return ([
                     'success' => false,
                     'message' => 'Barang sudah ada.'
@@ -140,8 +139,8 @@ class BarangController extends Controller
 
             $alias = Str::slug($name).'-'.rand(111111, 999999);
 
-            $find_user = Barang::where('id', '=', $barang_id)->get();
-            if (count($find_user) != 1) {
+            $find_barang = Barang::where('id', '=', $barang_id)->get();
+            if (count($find_barang) != 1) {
                 return ([
                     'success' => false,
                     'message' => 'Barang tidak ditemukan.'
