@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\DetailTransaksiController;
 //middleware
 use App\Http\Middleware\EnsureTokenIsValid;
 
@@ -54,4 +55,10 @@ Route::group(['prefix' => 'transaksi'], function () {
     Route::post('/create_transaksi', [TransaksiController::class, 'create_transaksi'])->middleware(EnsureTokenIsValid::class);
     Route::post('/update', [TransaksiController::class, 'update_transaksi'])->middleware(EnsureTokenIsValid::class);
     Route::post('/delete', [TransaksiController::class, 'delete_transaksi'])->middleware(EnsureTokenIsValid::class);
+});
+
+Route::group(['prefix' => 'detail_transaksi'], function () {
+    Route::post('/get_by_id', [DetailTransaksiController::class, 'get_detail_trans_by_id'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/update', [DetailTransaksiController::class, 'update_detail_trans'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/delete', [DetailTransaksiController::class, 'delete_detail_trans'])->middleware(EnsureTokenIsValid::class);
 });

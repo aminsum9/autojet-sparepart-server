@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\Barang;
+use App\Models\DetailTransaksi;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -135,8 +136,28 @@ class TransaksiController extends Controller
 
         if ($add_transaksi) {
             //add detail transaksi
+            foreach ($detail_transaksi as $item) {
+                $add_d_trans = new DetailTransaksi();
 
+                $add_d_trans->trans_id  = $add_transaksi->id;
+                $add_d_trans->qty       = $item['qty'];
+                $add_d_trans->subtotal  = $item['subtotal'];
+                $add_d_trans->discount  = $item['discount'];
+                $add_d_trans->grand_total = $item['grand_total'];
+                $add_d_trans->notes     = $item['notes'];
+
+                $add_d_trans->save();
+            }
+            
             //update stock barang
+            foreach ($detail_transaksi as $item) {
+                $barang = Barang::where('id', '=', $item['id'])->first();
+
+                Barang::where('id', '=', $item['id'])->update([
+                    'qty'          => $barang->qty - $item['qty'],
+                ]);
+
+            }
             
             $response = ([
                 'trx_id'      => $add_transaksi['trx_id'],
