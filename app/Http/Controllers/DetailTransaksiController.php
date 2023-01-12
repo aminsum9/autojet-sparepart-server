@@ -40,13 +40,14 @@ class DetailTransaksiController extends Controller
         
         $detail_trans_id = $request->input('id');
         $trans_id = $request->input('trans_id');
+        $barang_id = $request->input('barang_id');
         $qty = $request->input('qty');
         $subtotal = $request->input('subtotal');
         $discount = $request->input('discount');
         $grand_total = $request->input('grand_total');
         $notes = $request->input('notes');
 
-        if (!empty($detail_trans_id) && !empty($trans_id) && !empty($qty) && !empty($subtotal) && !empty($discount) && !empty($grand_total)) {
+        if (!empty($detail_trans_id) && !empty($barang_id) && !empty($trans_id) && !empty($qty) && !empty($subtotal) && !empty($discount) && !empty($grand_total)) {
 
             $find_d_trans = DetailTransaksi::where('id', '=', $detail_trans_id)->get();
 
@@ -59,6 +60,7 @@ class DetailTransaksiController extends Controller
 
             $update_d_trans = DetailTransaksi::where('id', '=', $detail_trans_id)->update([
                 'trans_id' => $trans_id,
+                'barang_id' => $barang_id,
                 'qty'      => $qty,
                 'subtotal' => $subtotal,
                 'discount' => $discount,
@@ -69,6 +71,7 @@ class DetailTransaksiController extends Controller
             if ($update_d_trans) {
                 $response = ([
                     'trans_id' => $trans_id,
+                    'barang_id' => $barang_id,
                     'qty'      => $qty,
                     'subtotal' => $subtotal,
                     'discount' => $discount,

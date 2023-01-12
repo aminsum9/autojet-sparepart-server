@@ -41,8 +41,8 @@ class TransaksiController extends Controller
     {
         $paging = $request->input('paging');
 
-        $transaksis = Transaksi::orderBy('created_at','DESC')->paginate($paging);
-
+        $transaksis = Transaksi::with('detail_transaksi.barang.suppliers','user')->orderBy('created_at','DESC')->paginate($paging);
+        
         return ([
             'success' => true,
             'message' => 'Data transaksi ditemukan.',
@@ -140,6 +140,7 @@ class TransaksiController extends Controller
                 $add_d_trans = new DetailTransaksi();
 
                 $add_d_trans->trans_id  = $add_transaksi->id;
+                $add_d_trans->barang_id = $item['id'];
                 $add_d_trans->qty       = $item['qty'];
                 $add_d_trans->subtotal  = $item['subtotal'];
                 $add_d_trans->discount  = $item['discount'];

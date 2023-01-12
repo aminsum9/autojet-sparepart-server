@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Supplier;
 
 class Warehouse extends Authenticatable
 {
@@ -25,4 +26,8 @@ class Warehouse extends Authenticatable
      *
      * @var array<int, string>
      */
+
+     public function supplier(){
+        return $this->hasOne(Supplier::class, 'id', 'supplier_id');
+    }
 }

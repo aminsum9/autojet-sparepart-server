@@ -52,7 +52,7 @@ Route::group(['prefix' => 'supplier'], function () {
 
 Route::group(['prefix' => 'transaksi'], function () {
     Route::post('/get_by_id', [TransaksiController::class, 'get_transaksi_by_id'])->middleware(EnsureTokenIsValid::class);
-    Route::post('/get_suppliers', [TransaksiController::class, 'get_transaksis'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/get_transaksis', [TransaksiController::class, 'get_transaksis'])->middleware(EnsureTokenIsValid::class);
     Route::post('/create_transaksi', [TransaksiController::class, 'create_transaksi'])->middleware(EnsureTokenIsValid::class);
     Route::post('/update', [TransaksiController::class, 'update_transaksi'])->middleware(EnsureTokenIsValid::class);
     Route::post('/delete', [TransaksiController::class, 'delete_transaksi'])->middleware(EnsureTokenIsValid::class);

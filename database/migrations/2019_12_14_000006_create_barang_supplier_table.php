@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDetailTransaksiTable extends Migration
+class CreateBarangSupplierTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,10 @@ class CreateDetailTransaksiTable extends Migration
      */
     public function up()
     {
-        Schema::create('detail_transaksi', function (Blueprint $table) {
+        Schema::create('barang_supplier', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('trans_id');
             $table->integer('barang_id');
-            $table->integer('qty');
-            $table->integer('subtotal');
-            $table->integer('discount')->nullable();
-            $table->integer('grand_total');
-            $table->string('notes')->nullable();
+            $table->integer('supplier_id');
             $table->timestamps();
         });
     }
@@ -33,6 +28,6 @@ class CreateDetailTransaksiTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_transaksi');
+        Schema::dropIfExists('barang_supplier');
     }
 }

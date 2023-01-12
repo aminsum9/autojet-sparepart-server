@@ -8,27 +8,20 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Barang;
 
-class Supplier extends Authenticatable
+class SupplierBarang extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    public $table = "supplier";
+    protected $table = "barang_supplier";
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+    public $timestamps = false;
+    protected $primaryKey = 'id';
+    
     protected $fillable = [
-        'name', 'email', 'image', 'address', 'phone', 'desc',
+        'supplier_id', 'barang_id',
     ];
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-
-     public function barangs()
-    {
-        return $this->belongsToMany(Barang::class);
-    }
 }
