@@ -66,6 +66,8 @@ Route::group(['prefix' => 'detail_transaksi'], function () {
 
 Route::group(['prefix' => 'warehouse'], function () {
     Route::post('/get_by_id', [WarehouseController::class, 'get_warehouse_id'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/get_warehouses', [WarehouseController::class, 'get_warehouses'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/add', [WarehouseController::class, 'add_warehouse'])->middleware(EnsureTokenIsValid::class);
     Route::post('/update', [WarehouseController::class, 'update_warehouse'])->middleware(EnsureTokenIsValid::class);
     Route::post('/delete', [WarehouseController::class, 'delete_warehouse'])->middleware(EnsureTokenIsValid::class);
 });

@@ -42,6 +42,8 @@ class VerifyCsrfToken extends Middleware
         'detail_transaksi/delete',
         //warehouse
         'warehouse/get_by_id',
+        'warehouse/get_warehouses',
+        'warehouse/add',
         'warehouse/update',
         'warehouse/delete',
     ];

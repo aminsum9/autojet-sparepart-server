@@ -34,16 +34,77 @@ class WarehouseController extends Controller
         ]);
     }
 
+    public function get_warehouses(Request $request)
+    {
+        $paging = $request->input('paging');
+
+        $warehouses = Warehouse::orderBy('created_at','DESC')->paginate($paging);
+
+        return ([
+            'success' => true,
+            'message' => 'Data warehouse ditemukan.',
+            'data'    => $warehouses
+        ]);
+    }
+
+    public function add_warehouse(Request $request)
+    {
+        $qty         = $request->input('qty');
+        $barang_id   = $request->input('barang_id');
+        $user_id     = $request->input('user_id');
+        $supplier_id = $request->input('supplier_id');
+        $notes       = $request->input('notes');
+
+        if (!empty($qty) && !empty($barang_id) && !empty($user_id) && !empty($supplier_id)) {
+
+            $warehouse = new Warehouse();
+
+            $warehouse->qty          = $qty;
+            $warehouse->barang_id    = $barang_id;
+            $warehouse->user_id      = $user_id;
+            $warehouse->supplier_id  = $supplier_id;
+            $warehouse->notes        = $notes;
+
+            if ($warehouse->save()) {
+                $response = ([
+                    'id'          => $warehouse->id,
+                    'qty'         => $qty,
+                    'barang_id'   => $barang_id,
+                    'user_id'     => $user_id,
+                    'supplier_id' => $supplier_id,
+                    'notes'       => $notes,
+                ]);
+
+                return ([
+                    'success' => true,
+                    'message' => 'Berhasil menambah data warehouse',
+                    'data'    => $response
+                ]);
+            } else {
+                return ([
+                    'success' => false,
+                    'message' => 'Gagal menambah data warehouse'
+                ]);
+            }
+        } else {
+            return ([
+                'success' => false,
+                'message' => 'Mohon lengkapi data yang diminta'
+            ]);
+        }
+    }
+
     public function update_warehouse(Request $request)
     {
         
         $ws_id = $request->input('id');
+        $qty = $request->input('qty');
         $barang_id = $request->input('barang_id');
         $user_id = $request->input('user_id');
         $supplier_id = $request->input('supplier_id');
         $notes = $request->input('notes');
 
-        if (!empty($barang_id) && !empty($user_id) && !empty($supplier_id)) {
+        if (!empty($qty) && !empty($barang_id) && !empty($user_id) && !empty($supplier_id)) {
 
             $find_ws = Warehouse::where('id', '=', $ws_id)->get();
 
@@ -55,6 +116,7 @@ class WarehouseController extends Controller
             }
 
             $update_ws = Warehouse::where('id', '=', $ws_id)->update([
+                'qty'         => $qty,
                 'barang_id'   => $barang_id,
                 'user_id'     => $user_id,
                 'supplier_id' => $supplier_id,
@@ -63,6 +125,7 @@ class WarehouseController extends Controller
 
             if ($update_ws) {
                 $response = ([
+                    'qty'         => $qty,
                     'barang_id'   => $barang_id,
                     'user_id'     => $user_id,
                     'supplier_id' => $supplier_id,
