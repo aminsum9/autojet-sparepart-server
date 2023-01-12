@@ -30,7 +30,7 @@ class DetailTransaksiController extends Controller
 
         return ([
             'success' => true,
-            'message' => 'Data barang ditemukan.',
+            'message' => 'Data detail transaksi ditemukan.',
             'data'    => $detail_transaksi
         ]);
     }
@@ -61,7 +61,6 @@ class DetailTransaksiController extends Controller
                 'trans_id' => $trans_id,
                 'qty'      => $qty,
                 'subtotal' => $subtotal,
-                'qty'      => $qty,
                 'discount' => $discount,
                 'grand_total'     => $grand_total,
                 'notes'    => $notes,
@@ -72,7 +71,6 @@ class DetailTransaksiController extends Controller
                     'trans_id' => $trans_id,
                     'qty'      => $qty,
                     'subtotal' => $subtotal,
-                    'qty'      => $qty,
                     'discount' => $discount,
                     'grand_total'     => $grand_total,
                     'notes'    => $notes,
