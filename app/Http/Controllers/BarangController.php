@@ -72,7 +72,7 @@ class BarangController extends Controller
 
         if (!empty($name) && !empty($price)) {
 
-            $alias = Str::slug($name).'-'.rand(111111, 999999);
+            $alias = Str::slug($name);
 
             $find_barang = Barang::where('alias', '=', $alias)->get();
 
@@ -131,6 +131,7 @@ class BarangController extends Controller
         
         $barang_id = $request->input('id');
         $name = $request->input('name');
+        $qty = $request->input('name');
         $price = $request->input('price');
         $qty = $request->input('qty');
         $discount = $request->input('discount');
@@ -138,18 +139,29 @@ class BarangController extends Controller
 
         if (!empty($barang_id) && !empty($name) && !empty($price)) {
 
-            $alias = Str::slug($name).'-'.rand(111111, 999999);
+            $alias = Str::slug($name);
 
-            $find_barang = Barang::where('id', '=', $barang_id)->get();
-            if (count($find_barang) != 1) {
+            $find_barang = Barang::where('id', '=', $barang_id)->first();
+            if (!$find_barang) {
                 return ([
                     'success' => false,
                     'message' => 'Barang tidak ditemukan.'
                 ]);
             }
 
+            if($find_barang['name'] !== $name){
+                $find_barang_alias = Barang::where('alias', '=', $alias)->get();
+                if (count($find_barang_alias) > 0) {
+                    return ([
+                        'success' => false,
+                        'message' => 'Barang dengan nama '.$name.' sudah ada.'
+                    ]);
+                }
+            }
+
             $update_barang = Barang::where('id', '=', $barang_id)->update([
                 'name'     => $name,
+                'qty'      => $qty,
                 'alias'    => $alias,
                 'price'    => $price,
                 'qty'      => $qty,
