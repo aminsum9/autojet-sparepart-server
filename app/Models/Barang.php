@@ -8,6 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Warehouse;
 use App\Models\Supplier;
+use App\Models\User;
 
 class Barang extends Authenticatable
 {
@@ -34,5 +35,9 @@ class Barang extends Authenticatable
 
     public function suppliers(){
         return $this->belongsToMany(Supplier::class);
+    }
+
+    public function users(){
+        return $this->belongsToMany(User::class);
     }
 }

@@ -39,9 +39,7 @@ class BarangController extends Controller
     {
         $paging = $request->input('paging');
 
-
-
-        $barangs = Barang::orderBy('created_at','DESC')->paginate($paging);
+        $barangs = Barang::with('suppliers','users')->orderBy('created_at','DESC')->paginate($paging);
 
         return ([
             'success' => true,

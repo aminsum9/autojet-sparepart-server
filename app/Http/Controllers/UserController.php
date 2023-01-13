@@ -145,7 +145,7 @@ class UserController extends Controller
                 'address' => $find_user[0]['address'],
                 'image' => $find_user[0]['image'],
                 'is_verify' => $find_user[0]['is_verify'],
-                'api_key' => $find_user[0]['api_key'],
+                'api_key' => $api_key,
             ]);
 
             if ($check_password && $update_token) {
