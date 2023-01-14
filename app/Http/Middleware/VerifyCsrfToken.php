@@ -19,6 +19,7 @@ class VerifyCsrfToken extends Middleware
         'user/check_login',
         'user/change_password',
         'user/update',
+        'user/delete',
         //barang
         'barang/get_by_id',
         'barang/get_barangs',

@@ -33,6 +33,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/change_password', [UserController::class, 'change_password'])->middleware(EnsureTokenIsValid::class);
     Route::post('/update',[UserController::class, 'update'])->middleware(EnsureTokenIsValid::class);
     Route::post('/get_users', [UserController::class, 'get_users'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/delete', [UserController::class, 'delete_user'])->middleware(EnsureTokenIsValid::class);
 });
 
 Route::group(['prefix' => 'barang'], function () {

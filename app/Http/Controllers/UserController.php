@@ -29,7 +29,7 @@ class UserController extends Controller
 
         $barangs = User::orderBy('created_at','DESC')->paginate($paging);
 
-        return ([
+        return json_encode([
             'success' => true,
             'message' => 'Data user ditemukan.',
             'data'    => $barangs
@@ -325,6 +325,26 @@ class UserController extends Controller
             return ([
                 'success' => false,
                 'message' => 'Mohon lengkapi data yang dibutuhkan'
+            ]);
+        }
+    }
+
+    public function delete_user(Request $request)
+    {
+
+        $user_id = $request->input('id');
+
+        $delete_user_data = User::where(['id' => $user_id])->delete();
+
+        if($delete_user_data){
+            return ([
+                'success' => true,
+                'message' => 'Berhasil menghapus data user',
+            ]);
+        } else {
+            return ([
+                'success' => true,
+                'message' => 'Gagal menghapus data user',
             ]);
         }
     }

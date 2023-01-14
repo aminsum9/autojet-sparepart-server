@@ -43,7 +43,7 @@ class TransaksiController extends Controller
 
         $transaksis = Transaksi::with('detail_transaksi.barang.suppliers','user')->orderBy('created_at','DESC')->paginate($paging);
         
-        return ([
+        return json_encode([
             'success' => true,
             'message' => 'Data transaksi ditemukan.',
             'data'    => $transaksis

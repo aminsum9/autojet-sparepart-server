@@ -40,7 +40,7 @@ class WarehouseController extends Controller
 
         $warehouses = Warehouse::orderBy('created_at','DESC')->paginate($paging);
 
-        return ([
+        return json_encode([
             'success' => true,
             'message' => 'Data warehouse ditemukan.',
             'data'    => $warehouses

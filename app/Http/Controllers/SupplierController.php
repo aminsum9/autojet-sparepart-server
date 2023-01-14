@@ -41,7 +41,7 @@ class SupplierController extends Controller
 
         $suppliers = Supplier::orderBy('created_at','DESC')->paginate($paging);
 
-        return ([
+        return json_encode([
             'success' => true,
             'message' => 'Data supplier ditemukan.',
             'data'    => $suppliers

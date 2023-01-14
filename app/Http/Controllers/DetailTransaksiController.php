@@ -27,7 +27,7 @@ class DetailTransaksiController extends Controller
 
         $detail_transaksi = DetailTransaksi::where('id','=',$d_trans_id)->first();
 
-        return ([
+        return json_encode([
             'success' => true,
             'message' => 'Data detail transaksi ditemukan.',
             'data'    => $detail_transaksi

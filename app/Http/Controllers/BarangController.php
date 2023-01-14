@@ -41,7 +41,7 @@ class BarangController extends Controller
 
         $barangs = Barang::with('suppliers','users')->orderBy('created_at','DESC')->paginate($paging);
 
-        return ([
+        return json_encode([
             'success' => true,
             'message' => 'Data barang ditemukan.',
             'data'    => $barangs
