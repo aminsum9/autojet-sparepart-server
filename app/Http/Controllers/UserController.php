@@ -23,6 +23,19 @@ class UserController extends Controller
         //
     }
 
+    public function get_users(Request $request)
+    {
+        $paging = $request->input('paging');
+
+        $barangs = User::orderBy('created_at','DESC')->paginate($paging);
+
+        return ([
+            'success' => true,
+            'message' => 'Data user ditemukan.',
+            'data'    => $barangs
+        ]);
+    }
+
     public function register(Request $request)
     {
         $name = $request->input('name');
