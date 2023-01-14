@@ -23,6 +23,20 @@ class UserController extends Controller
         //
     }
 
+    public function get_user_by_id(Request $request)
+    {
+        $auth_data = $request->get('auth');
+        $user_id = $auth_data[0]['id'];
+
+        $barangs = User::where('id','=', $user_id)->first();
+
+        return json_encode([
+            'success' => true,
+            'message' => 'Data user ditemukan.',
+            'data'    => $barangs
+        ]);
+    }
+
     public function get_users(Request $request)
     {
         $paging = $request->input('paging');
