@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
+use App\Models\Barang;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -38,7 +39,7 @@ class WarehouseController extends Controller
     {
         $paging = $request->input('paging');
 
-        $warehouses = Warehouse::orderBy('created_at','DESC')->paginate($paging);
+        $warehouses = Warehouse::with('barang','user','supplier')->orderBy('created_at','DESC')->paginate($paging);
 
         return json_encode([
             'success' => true,
@@ -49,13 +50,25 @@ class WarehouseController extends Controller
 
     public function add_warehouse(Request $request)
     {
+        $auth_data = $request->get('auth');
+        $user_id = $auth_data[0]['id'];
         $qty         = $request->input('qty');
         $barang_id   = $request->input('barang_id');
-        $user_id     = $request->input('user_id');
         $supplier_id = $request->input('supplier_id');
         $notes       = $request->input('notes');
 
         if (!empty($qty) && !empty($barang_id) && !empty($user_id) && !empty($supplier_id)) {
+
+            $barang = Barang::where('id','=',$barang_id)->first();
+            if(!empty($barang)){
+                $new_qty = $barang->qty + $qty;
+                Barang::where('id','=',$barang_id)->update(['qty' => $new_qty]);
+            } else {
+                return ([
+                    'success' => false,
+                    'message' => 'Barang tidak ditemukan'
+                ]);
+            }
 
             $warehouse = new Warehouse();
 
@@ -66,6 +79,7 @@ class WarehouseController extends Controller
             $warehouse->notes        = $notes;
 
             if ($warehouse->save()) {
+
                 $response = ([
                     'id'          => $warehouse->id,
                     'qty'         => $qty,
@@ -96,11 +110,11 @@ class WarehouseController extends Controller
 
     public function update_warehouse(Request $request)
     {
-        
+        $auth_data = $request->get('auth');
+        $user_id = $auth_data[0]['id'];
         $ws_id = $request->input('id');
         $qty = $request->input('qty');
         $barang_id = $request->input('barang_id');
-        $user_id = $request->input('user_id');
         $supplier_id = $request->input('supplier_id');
         $notes = $request->input('notes');
 

@@ -50,11 +50,19 @@ class TransaksiController extends Controller
         ]);
     }
 
+    public function generate_trx_id($trx_id){
+        $find_trans = Transaksi::where('trx_id','=',$trx_id)->first();
+        if($find_trans){
+            return $this->generate_trx_id(rand(111111, 999999));
+        } else {
+            return $trx_id;
+        }
+        //"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    }
+
     public function create_transaksi(Request $request)
     {
-        $trx_id = $request->input('trx_id');
         $user_id = $request->input('user_id');
-        $subtotal = $request->input('subtotal');
         $discount = $request->input('discount');
         $notes = $request->input('notes');
         $detail_transaksi = $request->input('detail_transaksi');
@@ -69,20 +77,26 @@ class TransaksiController extends Controller
 
         $inputs = $request->all();
         $rules = [
-            'trx_id'           => 'required',
             'user_id'          => 'required',
-            'subtotal'         => 'required',
-            'discount'         => 'required',
             'detail_transaksi'         => 'required',
         ];
 
         $messages = [
-            'trx_id.required'       => 'trx_id harus diisi!',
             'user_id.required'      => 'user_id harus diisi!',
-            'discount.required'     => 'discount harus diisi!',
-            'subtotal.required'     => 'subtotal harus diisi!',
             'detail_transaksi.required'       => 'detail_transaksi harus diisi!',
         ];
+
+        if($detail_transaksi == "[]"){
+            $res['success'] = false;
+            $res['message'] = "Detail transaksi tidak boleh kosong!";
+            return collect($res)->toJson();
+        }
+
+        if(count($detail_transaksi) == 0){
+            $res['success'] = false;
+            $res['message'] = "Detail transaksi tidak boleh kosong!";
+            return collect($res)->toJson();
+        }
 
         $validator = Validator::make($inputs,$rules,$messages);
 
@@ -92,23 +106,24 @@ class TransaksiController extends Controller
             return collect($res)->toJson();
         }
 
-        $find_transaksi = Transaksi::where('trx_id', '=', $trx_id)->get();
-
-        if (count($find_transaksi) == 1) {
-            return ([
-                'success' => false,
-                'message' => 'ID transaksi sudah digunakan.'
-            ]);
-        }
-
         //check stock barang
         $is_stock_empty = false;
-        
+        $subtotal = 0;
         if(gettype($detail_transaksi) === 'array'){
-            foreach ($detail_transaksi as $item) {
+            foreach ($detail_transaksi as $item) { 
                 $find_barang = Barang::where('id', '=', $item['id'])->first();
+                $subtotal = $subtotal + $find_barang['price'] * $item['qty'];
 
                 if($find_barang['qty'] <= 0 || ($find_barang['qty'] - $item['qty'] < 0)){
+                    $is_stock_empty = true;
+                }
+            }
+        } else {
+            foreach (json_decode($detail_transaksi) as $item) {
+                $find_barang = Barang::where('id', '=', $item->id)->first();
+                $subtotal = $subtotal + $find_barang['price'] * $item->qty;
+
+                if($find_barang['qty'] <= 0 || ($find_barang['qty'] - $item->qty < 0)){
                     $is_stock_empty = true;
                 }
             }
@@ -121,6 +136,8 @@ class TransaksiController extends Controller
             ]);
         }
 
+        $trx_id = $this->generate_trx_id(rand(111111, 999999));
+
         //count grand total
         $grand_total = $subtotal - $discount;
        
@@ -128,7 +145,7 @@ class TransaksiController extends Controller
             'trx_id'        => $trx_id,
             'user_id'       => $user_id,
             'status'        => 'new',
-            'discount'      => $discount,
+            'discount'      => $discount || 0,
             'subtotal'      => $subtotal,
             'grand_total'   => $grand_total,
             'notes'         => $notes,
@@ -136,26 +153,28 @@ class TransaksiController extends Controller
 
         if ($add_transaksi) {
             //add detail transaksi
-            foreach ($detail_transaksi as $item) {
+            foreach (json_decode($detail_transaksi) as $item) {
+                $find_barang = Barang::where('id', '=', $item->id)->first();
+
                 $add_d_trans = new DetailTransaksi();
 
                 $add_d_trans->trans_id  = $add_transaksi->id;
-                $add_d_trans->barang_id = $item['id'];
-                $add_d_trans->qty       = $item['qty'];
-                $add_d_trans->subtotal  = $item['subtotal'];
-                $add_d_trans->discount  = $item['discount'];
-                $add_d_trans->grand_total = $item['grand_total'];
-                $add_d_trans->notes     = $item['notes'];
+                $add_d_trans->barang_id = $item->id;
+                $add_d_trans->qty       = $item->qty;
+                $add_d_trans->subtotal  = $item->qty * $find_barang->price;
+                $add_d_trans->discount  = $item->qty * $find_barang->discount;
+                $add_d_trans->grand_total = $item->qty * $find_barang->price;
+                $add_d_trans->notes     = $item->notes;
 
                 $add_d_trans->save();
             }
             
             //update stock barang
-            foreach ($detail_transaksi as $item) {
-                $barang = Barang::where('id', '=', $item['id'])->first();
+            foreach (json_decode($detail_transaksi) as $item) {
+                $barang = Barang::where('id', '=', $item->id)->first();
 
-                Barang::where('id', '=', $item['id'])->update([
-                    'qty'          => $barang->qty - $item['qty'],
+                Barang::where('id', '=', $item->id)->update([
+                    'qty'          => $barang->qty - $item->id,
                 ]);
 
             }
