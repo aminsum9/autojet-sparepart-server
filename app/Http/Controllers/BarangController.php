@@ -37,9 +37,9 @@ class BarangController extends Controller
 
     public function get_barangs(Request $request)
     {
-        $paging = $request->input('paging');
+        // $paging = $request->input('paging');
 
-        $barangs = Barang::with('suppliers','users')->orderBy('created_at','DESC')->paginate($paging);
+        $barangs = Barang::with('suppliers','users')->orderBy('created_at','DESC')->get();
 
         return json_encode([
             'success' => true,

@@ -32,7 +32,7 @@ class Transaksi extends Authenticatable
         return $this->hasMany(DetailTransaksi::class, 'trans_id', 'id');
     }
 
-    public function user(){
-        return $this->hasMany(User::class, 'id', 'user_id');
+    public function created_by(){
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

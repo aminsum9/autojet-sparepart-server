@@ -39,9 +39,9 @@ class UserController extends Controller
 
     public function get_users(Request $request)
     {
-        $paging = $request->input('paging');
+        // $paging = $request->input('paging');
 
-        $barangs = User::orderBy('created_at','DESC')->paginate($paging);
+        $barangs = User::orderBy('created_at','DESC')->get();
 
         return json_encode([
             'success' => true,

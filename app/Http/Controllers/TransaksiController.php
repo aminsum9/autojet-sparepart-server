@@ -39,9 +39,9 @@ class TransaksiController extends Controller
 
     public function get_transaksis(Request $request)
     {
-        $paging = $request->input('paging');
+        // $paging = $request->input('paging');
 
-        $transaksis = Transaksi::with('detail_transaksi.barang.suppliers','user')->orderBy('created_at','DESC')->paginate($paging);
+        $transaksis = Transaksi::with('detail_transaksi.barang.suppliers','created_by')->orderBy('created_at','DESC')->get();
         
         return json_encode([
             'success' => true,
@@ -62,14 +62,15 @@ class TransaksiController extends Controller
 
     public function create_transaksi(Request $request)
     {
-        $user_id = $request->input('user_id');
+        $auth_data = $request->get('auth');
+        $user_id = $auth_data[0]['id'];
+        
         $discount = $request->input('discount');
         $notes = $request->input('notes');
         $detail_transaksi = $request->input('detail_transaksi');
         
         $responseError = ([
             'trx_id' => 0,
-            'user_id' =>  "",
             'subtotal' =>  "",
             'discount' => "",
             'detail_transaksi' => "",
@@ -77,12 +78,10 @@ class TransaksiController extends Controller
 
         $inputs = $request->all();
         $rules = [
-            'user_id'          => 'required',
             'detail_transaksi'         => 'required',
         ];
 
         $messages = [
-            'user_id.required'      => 'user_id harus diisi!',
             'detail_transaksi.required'       => 'detail_transaksi harus diisi!',
         ];
 

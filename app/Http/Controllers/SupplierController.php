@@ -37,9 +37,9 @@ class SupplierController extends Controller
 
     public function get_suppliers(Request $request)
     {
-        $paging = $request->input('paging');
+        // $paging = $request->input('paging');
 
-        $suppliers = Supplier::orderBy('created_at','DESC')->paginate($paging);
+        $suppliers = Supplier::orderBy('created_at','DESC')->get();
 
         return json_encode([
             'success' => true,

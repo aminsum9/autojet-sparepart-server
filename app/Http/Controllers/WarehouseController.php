@@ -37,9 +37,9 @@ class WarehouseController extends Controller
 
     public function get_warehouses(Request $request)
     {
-        $paging = $request->input('paging');
+        // $paging = $request->input('paging');
 
-        $warehouses = Warehouse::with('barang','user','supplier')->orderBy('created_at','DESC')->paginate($paging);
+        $warehouses = Warehouse::with('barang','user','supplier')->orderBy('created_at','DESC')->get();
 
         return json_encode([
             'success' => true,
