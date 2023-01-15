@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
 use App\Models\Barang;
+use App\Models\Supplier;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -71,12 +72,15 @@ class WarehouseController extends Controller
             }
 
             $warehouse = new Warehouse();
-
+            
             $warehouse->qty          = $qty;
             $warehouse->barang_id    = $barang_id;
             $warehouse->user_id      = $user_id;
             $warehouse->supplier_id  = $supplier_id;
             $warehouse->notes        = $notes;
+
+            // $supplier = new Supplier();
+            // $supplier->barangs()->attach($barang_id);
 
             if ($warehouse->save()) {
 

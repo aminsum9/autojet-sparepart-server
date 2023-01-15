@@ -37,7 +37,7 @@ class Barang extends Authenticatable
         return $this->belongsToMany(Supplier::class);
     }
 
-    public function users(){
+    public function input_by(){
         return $this->belongsToMany(User::class);
     }
 }

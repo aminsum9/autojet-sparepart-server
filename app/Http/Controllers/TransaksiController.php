@@ -91,11 +91,11 @@ class TransaksiController extends Controller
             return collect($res)->toJson();
         }
 
-        if(count($detail_transaksi) == 0){
-            $res['success'] = false;
-            $res['message'] = "Detail transaksi tidak boleh kosong!";
-            return collect($res)->toJson();
-        }
+        // if(count($detail_transaksi) == 0){
+        //     $res['success'] = false;
+        //     $res['message'] = "Detail transaksi tidak boleh kosong!";
+        //     return collect($res)->toJson();
+        // }
 
         $validator = Validator::make($inputs,$rules,$messages);
 

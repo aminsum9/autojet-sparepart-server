@@ -39,7 +39,7 @@ class BarangController extends Controller
     {
         // $paging = $request->input('paging');
 
-        $barangs = Barang::with('suppliers','users')->orderBy('created_at','DESC')->get();
+        $barangs = Barang::with('suppliers','input_by')->orderBy('created_at','DESC')->get();
 
         return json_encode([
             'success' => true,
