@@ -345,19 +345,28 @@ class UserController extends Controller
 
     public function delete_user(Request $request)
     {
+        $auth_data = $request->get('auth');
+        $current_user_id = $auth_data[0]['id'];
 
         $user_id = $request->input('id');
+
+        if($current_user_id == $user_id){
+            return json_encode([
+                'success' => false,
+                'message' => 'Tidak dapat menghapus user yang sedang anda gunakan.',
+            ]);
+        }
 
         $delete_user_data = User::where(['id' => $user_id])->delete();
 
         if($delete_user_data){
-            return ([
+            return json_encode([
                 'success' => true,
                 'message' => 'Berhasil menghapus data user',
             ]);
         } else {
-            return ([
-                'success' => true,
+            return json_encode([
+                'success' => false,
                 'message' => 'Gagal menghapus data user',
             ]);
         }
