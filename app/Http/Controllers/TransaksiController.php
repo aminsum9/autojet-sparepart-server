@@ -143,7 +143,7 @@ class TransaksiController extends Controller
         $add_transaksi = Transaksi::create([
             'trx_id'        => $trx_id,
             'user_id'       => $user_id,
-            'status'        => 'new',
+            'status'        => 'finish',
             'discount'      => $discount || 0,
             'subtotal'      => $subtotal,
             'grand_total'   => $grand_total,
@@ -173,7 +173,7 @@ class TransaksiController extends Controller
                 $barang = Barang::where('id', '=', $item->id)->first();
 
                 Barang::where('id', '=', $item->id)->update([
-                    'qty'          => $barang->qty - $item->id,
+                    'qty'          => $barang->qty - $item->qty,
                 ]);
 
             }
