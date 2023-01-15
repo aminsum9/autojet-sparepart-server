@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Warehouse;
 use App\Models\Barang;
-use App\Models\Supplier;
+use App\Models\SupplierBarang;
+use App\Models\BarangUser;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -53,6 +54,7 @@ class WarehouseController extends Controller
     {
         $auth_data = $request->get('auth');
         $user_id = $auth_data[0]['id'];
+        
         $qty         = $request->input('qty');
         $barang_id   = $request->input('barang_id');
         $supplier_id = $request->input('supplier_id');
@@ -79,8 +81,44 @@ class WarehouseController extends Controller
             $warehouse->supplier_id  = $supplier_id;
             $warehouse->notes        = $notes;
 
-            // $supplier = new Supplier();
-            // $supplier->barangs()->attach($barang_id);
+            //add to table supplier_barang
+            $supplier_barang = SupplierBarang::where('barang_id', '=', $barang_id)->get();
+            
+            $fill_supplier_barang = false;
+
+            foreach ($supplier_barang as $item) {
+                if($item['supplier_id'] == $supplier_id){
+                    $fill_supplier_barang = true;
+                }
+            };
+
+            if(!$fill_supplier_barang){
+                $barang_supplier = new SupplierBarang();
+                
+                $barang_supplier->supplier_id = $supplier_id;
+                $barang_supplier->barang_id = $barang_id;
+    
+                $barang_supplier->save();
+            }
+            //add to table barang_user
+            $supplier_barang = BarangUser::where('barang_id', '=', $barang_id)->get();
+            
+            $fill_barang_user = false;
+
+            foreach ($supplier_barang as $item) {
+                if($item['user_id'] == $user_id){
+                    $fill_barang_user = true;
+                }
+            };
+
+            if(!$fill_barang_user){
+                $barang_user = new BarangUser();
+                
+                $barang_user->user_id = $user_id;
+                $barang_user->barang_id = $barang_id;
+    
+                $barang_user->save();
+            }
 
             if ($warehouse->save()) {
 

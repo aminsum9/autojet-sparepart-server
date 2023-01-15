@@ -6,22 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Barang;
+use Illuminate\Database\Eloquent\Model;
 
-class SupplierBarang extends Authenticatable
+
+class SupplierBarang extends  Model
 {
     use HasApiTokens, HasFactory, Notifiable;
-    protected $table = "barang_supplier";
+    public $table = "barang_supplier";
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    public $timestamps = false;
-    protected $primaryKey = 'id';
+    public $timestamps = true;
+    public $primaryKey = 'id';
     
-    protected $fillable = [
+    public $fillable = [
         'supplier_id', 'barang_id',
     ];
 }
