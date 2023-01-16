@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
@@ -207,8 +208,6 @@ class TransaksiController extends Controller
     {
         
         $trans_id = $request->input('id');
-        $id_trx = $request->input('id_trx');
-        $user_id = $request->input('user_id');
         $status = $request->input('status');
         $subtotal = $request->input('subtotal');
         $discount = $request->input('discount');
@@ -216,38 +215,22 @@ class TransaksiController extends Controller
         $notes = $request->input('notes');
 
         $inputs = $request->all();
-        $responseError = ([
-            'trans_id' => 0,
-            'id_trx' => "",
-            'user_id' =>  "",
-            'status' =>  "",
-            'subtotal' =>  "",
-            'discount' => "",
-            'grand_total' => "",
-            'notes' => "",
-        ]);
 
         $inputs = $request->all();
         $rules = [
-            'trans_id'         => 'required',
-            'id_trx'           => 'required',
-            'user_id'          => 'required',
+            'id'               => 'required',
             'status'           => 'required',
             'subtotal'         => 'required',
             'discount'         => 'required',
             'grand_total'      => 'required',
-            'notes'            => 'required',
         ];
 
         $messages = [
-            'trans_id.required'     => 'trans_id harus diisi!',
-            'id_trx.required'       => 'id_trx harus diisi!',
-            'user_id.required'      => 'user_id harus diisi!',
+            'id.required'           => 'id harus diisi!',
             'status.required'       => 'status harus diisi!',
-            'discount.required'     => 'discount harus diisi!',
             'subtotal.required'     => 'subtotal harus diisi!',
+            'discount.required'     => 'discount harus diisi!',
             'grand_total.required'  => 'grand_total harus diisi!',
-            'notes.required'        => 'notes harus diisi!',
         ];
 
         $validator = Validator::make($inputs,$rules,$messages);
@@ -257,8 +240,9 @@ class TransaksiController extends Controller
             $res['message'] = $validator->errors()->all();
             return collect($res)->toJson();
         }
-
+        
         $find_transaksi = Transaksi::where('id', '=', $trans_id)->get();
+       
         if (count($find_transaksi) != 1) {
             return ([
                 'success' => false,
@@ -267,9 +251,6 @@ class TransaksiController extends Controller
         }
 
         $update_transaksi = Transaksi::where('id', '=', $trans_id)->update([
-            'id'           => $trans_id,
-            'id_trx'       => $id_trx,
-            'user_id'      => $user_id,
             'status'       => $status,
             'discount'     => $discount,
             'subtotal'     => $subtotal,
@@ -279,9 +260,9 @@ class TransaksiController extends Controller
 
         if ($update_transaksi) {
             $response = ([
-                'trans_id'     => $trans_id,
-                'id_trx'       => $id_trx,
-                'user_id'      => $user_id,
+                'id'           => $update_transaksi['id'],
+                'id_trx'       => $update_transaksi['id_trx'],
+                'user_id'      => $update_transaksi['user_id'],
                 'status'       => $status,
                 'discount'     => $discount,
                 'subtotal'     => $subtotal,
@@ -321,5 +302,56 @@ class TransaksiController extends Controller
                 'message' => 'Gagal menghapus data transaksi',
             ]);
         }
+    }
+
+    public function get_trans_report(Request $request)
+    {
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        $data_trans = Transaksi::where([['created_at','>=', $start_date],['created_at','<=',$end_date]])->orderBy('created_at','DESC')->get();
+
+        $data_detail_trans = DetailTransaksi::with('barang')
+        ->select('barang_id',DB::raw('SUM(qty) as total_qty'))
+        ->where([['created_at','>=', $start_date],['created_at','<=',$end_date]])
+        ->groupBy('barang_id')
+        ->get();
+
+        //total pada transaksi
+        $total_subtotal = 0;
+        $total_diskon = 0;
+        $total_grand_total = 0;
+        
+        foreach ($data_trans  as $item) {
+            $total_subtotal =  $total_subtotal + $item['subtotal'];
+            $total_diskon =  $total_diskon + $item['discount'];
+            $total_grand_total =  $total_grand_total + $item['grand_total'];
+        };
+
+        //total barang terjual
+        $count_detail_trans = [];
+        
+        foreach ($data_detail_trans  as $item) {
+            $barang = Barang::where('id','=',$item['barang_id'])->first();
+
+            $count_detail_trans[] = [
+                'barang' => $barang['name'],
+                'qty' => $item['total_qty'],
+            ];
+        };
+
+
+        $respose = [
+            'total_barang_terjual' =>  $count_detail_trans,
+            'total_subtotal' => $total_subtotal,
+            'total_diskon' => $total_diskon,
+            'total_grand_total' => $total_grand_total
+        ];
+        
+        return json_encode([
+            'success' => true,
+            'message' => 'Data transaksi ditemukan.',
+            'data'    => $respose,
+        ]);
     }
 }

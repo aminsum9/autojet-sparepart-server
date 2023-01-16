@@ -20,7 +20,7 @@ class DetailTransaksi extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+    public $fillable = [
         'trans_id', 'barang_id', 'qty', 'subtotal', 'discount', 'grand_total', 'notes',
     ];
     /**

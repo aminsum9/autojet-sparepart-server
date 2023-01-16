@@ -59,6 +59,7 @@ Route::group(['prefix' => 'transaksi'], function () {
     Route::post('/create_transaksi', [TransaksiController::class, 'create_transaksi'])->middleware(EnsureTokenIsValid::class);
     Route::post('/update', [TransaksiController::class, 'update_transaksi'])->middleware(EnsureTokenIsValid::class);
     Route::post('/delete', [TransaksiController::class, 'delete_transaksi'])->middleware(EnsureTokenIsValid::class);
+    Route::post('/report', [TransaksiController::class, 'get_trans_report'])->middleware(EnsureTokenIsValid::class);
 });
 
 Route::group(['prefix' => 'detail_transaksi'], function () {

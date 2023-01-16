@@ -39,6 +39,7 @@ class VerifyCsrfToken extends Middleware
         'transaksi/create_transaksi',
         'transaksi/update',
         'transaksi/delete',
+        'transaksi/report',
         //detail transaksi
         'detail_transaksi/get_by_id',
         'detail_transaksi/update',

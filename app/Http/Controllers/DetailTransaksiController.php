@@ -25,7 +25,7 @@ class DetailTransaksiController extends Controller
     {
         $d_trans_id = $request->input('id');
 
-        $detail_transaksi = DetailTransaksi::where('id','=',$d_trans_id)->first();
+        $detail_transaksi = DetailTransaksi::with('barang')->where('id','=',$d_trans_id)->first();
 
         return json_encode([
             'success' => true,
