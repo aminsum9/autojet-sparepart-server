@@ -81,10 +81,18 @@ class BarangController extends Controller
                 ]);
             }
 
+            $imageName = "";
+
+            if($request->file('image') !== null && $request->file('image') !== ""){
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images'), $imageName);
+            }
+
             $add_barang = Barang::create([
                 'name'     => $name,
                 'alias'    => $alias,
-                'image'    => $image,
+                'image'    => $imageName,
                 'price'    => $price,
                 'qty'      => $qty,
                 'discount' => $discount,
@@ -92,6 +100,7 @@ class BarangController extends Controller
             ]);
 
             if ($add_barang) {
+
                 $response = ([
                     'id'    => $add_barang['id'],
                     'name'  => $add_barang['name'],
