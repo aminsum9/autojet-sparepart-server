@@ -86,7 +86,7 @@ class BarangController extends Controller
             if($request->file('image') !== null && $request->file('image') !== ""){
                 $image = $request->file('image');
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images'), $imageName);
+                $image->move(public_path('images/barang'), $imageName);
             }
 
             $add_barang = Barang::create([
