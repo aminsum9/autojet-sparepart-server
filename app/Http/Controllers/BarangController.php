@@ -37,9 +37,16 @@ class BarangController extends Controller
 
     public function get_barangs(Request $request)
     {
+        $keyword = $request->input('keyword');
         // $paging = $request->input('paging');
 
-        $barangs = Barang::with('suppliers','input_by')->orderBy('created_at','DESC')->get();
+        $barangs = Barang::with('suppliers','input_by')->orderBy('created_at','DESC');
+
+        if($keyword){
+            $barangs = $barangs->whereRaw('name LIKE ?','%'.$keyword.'%');
+        }
+
+        $barangs = $barangs->get();
 
         return json_encode([
             'success' => true,
