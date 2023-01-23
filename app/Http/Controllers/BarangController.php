@@ -58,7 +58,7 @@ class BarangController extends Controller
     public function add_barang(Request $request)
     {
         $name = $request->input('name');
-        $image = $request->input('image');
+        $image = $request->file('image');
         $price = $request->input('price');
         $qty = $request->input('qty');
         $discount = $request->input('discount');
