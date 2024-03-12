@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
 
 class UserController extends Controller
 {
@@ -103,9 +102,12 @@ class UserController extends Controller
                     'api_key' => $api_key,
                 ]);
 
+                $token = csrf_token();
+
                 return ([
                     'success' => true,
                     'api_key' => $api_key,
+                    'csrf_token' => $token,
                     'message' => 'Anda berhasil melakukan registrasi',
                     'data'    => $response
                 ]);

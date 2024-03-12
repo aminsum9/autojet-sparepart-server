@@ -24,7 +24,7 @@ class VerifyCsrfToken extends Middleware
         //barang
         'barang/get_by_id',
         'barang/get_barangs',
-        'barang/add',
+        // 'barang/add',
         'barang/update',
         'barang/delete',
         //supplier
